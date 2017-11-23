@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Javax.Microedition.Khronos.Opengles;
 using Com.Pikkart.AR.Recognition;
 using Javax.Microedition.Khronos.Egl;
+using System.Threading.Tasks;
+using Android.App;
+using System;
 
 namespace PikkartSample.Droid
 {
@@ -28,10 +21,13 @@ namespace PikkartSample.Droid
         //the 3d object we will render on the marker
         private Mesh monkeyMesh = null;
 
+        ProgressDialog progressDialog;
+
         /* Constructor. */
         public ARRenderer(Context con)
         {
             context = con;
+            progressDialog = new ProgressDialog(con);
         }
 
         /** Called when the surface is created or recreated. 
@@ -40,9 +36,36 @@ namespace PikkartSample.Droid
         {
             gl.GlClearColor(1.0f, 1.0f, 1.0f, 1.0f);
             //Here we create the 3D object and initialize textures, shaders, etc.
+
+            Task.Run(async () =>
+            {
+                try
+                {
+                    InitMeshes();
+                }
+                catch (OperationCanceledException ex)
+                {
+                    Console.WriteLine("init failed: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            });
+        }
+
+        private void InitMeshes()
+        {
+            ((Activity)context).RunOnUiThread(() =>
+            {
+                progressDialog = ProgressDialog.Show(context, "Loading textures", "The 3D template textures of this tutorial have not been loaded yet", true);
+            });
+
             monkeyMesh = new Mesh();
             monkeyMesh.InitMesh(context.Assets, "media/monkey.json", "media/texture.png");
 
+            if (progressDialog != null)
+                progressDialog.Dismiss();
         }
 
         /** Called when the surface changed size. */
@@ -129,9 +152,20 @@ namespace PikkartSample.Droid
             float[] mvpMatrix = new float[16];
             if (computeModelViewProjectionMatrix(mvpMatrix))
             {
-                //draw our 3d mesh on top of the marker
-                monkeyMesh.DrawMesh(mvpMatrix);
-                RenderUtils.CheckGLError("completed Monkey head Render");
+                if (monkeyMesh != null && monkeyMesh.MeshLoaded)
+                {
+                    if (monkeyMesh.GLLoaded)
+                    {
+                        //draw our 3d mesh on top of the marker
+                        monkeyMesh.DrawMesh(mvpMatrix);
+
+                    }
+                    else
+                        monkeyMesh.InitMeshGL();
+
+                    RenderUtils.CheckGLError("completed Monkey head Render");
+                }
+
             }
 
             gl.GlFinish();

@@ -144,9 +144,6 @@
     <AndroidAsset Include="Assets\media\pikkart_keyframe.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\media\pikkart_video.mp4" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\media\play.png" />
   </ItemGroup>
   <ItemGroup>
