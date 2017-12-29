@@ -113,46 +113,50 @@ namespace PikkartSample.Droid
             }
         }
 
-        public void CloudMarkerNotFound()
+        void IRecognitionListener.ARLogoFound(string p0, int p1)
         {
-            //throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
-        public void ExecutingCloudSearch()
+        void IRecognitionListener.CloudMarkerNotFound()
         {
-            //throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
-        public void InternetConnectionNeeded()
+        void IRecognitionListener.ExecutingCloudSearch()
         {
-            //throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
-        public void MarkerFound(Marker marker)
+        void IRecognitionListener.InternetConnectionNeeded()
         {
-            //throw new NotImplementedException();
-            Toast.MakeText(this, "PikkartAR: found marker " + marker.Id,
-                ToastLength.Short).Show();
+            // throw new NotImplementedException();
         }
 
-        public void MarkerNotFound()
+        void IRecognitionListener.MarkerEngineToUpdate(string p0)
         {
-            //throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
-        public void MarkerTrackingLost(string p0)
+        void IRecognitionListener.MarkerFound(Marker p0)
         {
-            //throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
-        public bool IsConnectionAvailable(Context p0)
+        void IRecognitionListener.MarkerNotFound()
         {
+            // throw new NotImplementedException();
+        }
+
+        void IRecognitionListener.MarkerTrackingLost(string p0)
+        {
+            // throw new NotImplementedException();
+        }
+
+        bool INetworkInfoProvider.IsConnectionAvailable(Context p0)
+        {
+            // throw new NotImplementedException();
             return false;
-        }
-
-        public void ARLogoFound(string p0, int p1)
-        {
-            //throw new NotImplementedException();
         }
     }
 }
